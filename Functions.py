@@ -8,6 +8,7 @@ from pytz import timezone
 # Constants
 DELAY_TIME = 0.01
 
+# Functions
 def cmdHelp():
     """Prints all commands."""
     commands = [
