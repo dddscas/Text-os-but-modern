@@ -1,144 +1,113 @@
 import datetime
-
-# Get the current time in EST
 import os
-import os.path
 import sys
 import time
 import re
-
 from pytz import timezone
-#######################################
-# Constants
-Delaytime2 = 0.01
 
-##########################################################
+# Constants
+DELAY_TIME = 0.01
 
 def cmdHelp():
-  '''Prints all commands'''
-  
-  print("Commands:")
-  print("1. help")
-  time.sleep(Delaytime2)
-  print("2. time")
-  time.sleep(Delaytime2)
-  print("3. clear")
-  time.sleep(Delaytime2)
-  print("4. history")
-  time.sleep(Delaytime2)
-  print("5. exit")
-  time.sleep(Delaytime2)
-  print("6. echo {arg}")
-  time.sleep(Delaytime2)
-  print("7. wait {arg}")
-  time.sleep(Delaytime2)
-  print("8. touch")
-  time.sleep(Delaytime2)
-  print("9. reboot")
-  time.sleep(Delaytime2)
-  print("10. Capture {arg}")
-  time.sleep(Delaytime2)
-  print("11. Release {arg}")
-  time.sleep(Delaytime2)
-  print("12. Apprehend {arg}")
-  time.sleep(Delaytime2)
-  print("13. Deapprehend {arg}")
-#end of help
+    """Prints all commands."""
+    commands = [
+        "1. help",
+        "2. time",
+        "3. clear",
+        "4. history",
+        "5. exit",
+        "6. echo {arg(str/int)}",
+        "7. wait {arg(int)}",
+        "8. touch",
+        "9. reboot",
+        "10. Capture {arg(int)}",
+        "11. Release {arg(int)}",
+        "12. Apprehend {arg(int)}",
+        "13. Deapprehend {arg(int)}",
+    ]
+
+    for command in commands:
+        print(command)
+        time.sleep(DELAY_TIME)
+
 def cmdTime():
-  '''current time and date'''
-  
-  now = datetime.datetime.now(timezone('US/Eastern'))
-  print(now.strftime("Date:"+"%B %d, %Y"+" Time:"+" %I:%M %p"+"\n"))
-#end of time
+    """Displays the current time and date."""
+    now = datetime.datetime.now(timezone('US/Eastern'))
+    print(now.strftime("Date: %B %d, %Y Time: %I:%M %p\n"))
+
 def cmdClear():
-  '''Clear all text in the console'''
-  
-  os.system("clear")
-#end of clear
+    """Clears all text in the console."""
+    os.system("clear")
+
 def cmdHistory(user):
-  '''Prints user history'''
-  
-  print(user['History'])
-#end of history
+    """Prints user history."""
+    print(user['History'])
+
 def cmdExit():
-  '''This function exits the program'''
-  
-  print("See you later!")
-  time.sleep(0.5)
-  sys.exit()
-#end of quit
+    """Exits the program."""
+    print("See you later!")
+    time.sleep(0.5)
+    sys.exit()
 
 def cmdEcho(input):
-  """Prints the input after typing echo input."""
-  
-  echoStr = ' '.join(input)
-  print(echoStr)
-#end of echo
+    """Prints the input after typing echo input."""
+    echo_str = ' '.join(input)
+    print(echo_str)
 
 def cmdWait(num):
-  ''' Wait for an amount of time '''
-  """Corrected by Jaredcat on discord"""
-  waittime = num[0]
+    """Waits for an amount of time."""
+    wait_time = num[0]
 
-  if f'{waittime}'.isdigit() and int(waittime) > 0:
-    time.sleep(int(waittime))
-  else:
-    print("Value cannot be zero or lower")
-#end of wait
+    if str(wait_time).isdigit() and int(wait_time) > 0:
+        time.sleep(int(wait_time))
+    else:
+        print("Value cannot be zero or lower")
 
 def cmdTouch():
-  """Creates an empty file with the specified name."""
-  """Corrected by @BenjaminYandon on repl"""
-  
-  while True:
-      try:
-          filename = input("Enter the filename: ")
-          filename = re.sub(r'\W+', '', filename) + '.txt'  
-          with open(filename, 'w'):
-              pass
-          break
-      except FileNotFoundError:
-          print("Invalid filename. Please try again.")
-      except FileExistsError:
-          print("File already exists. Please choose a different filename.")
+    """Creates an empty file with the specified name."""
+    while True:
+        try:
+            filename = input("Enter the filename: ")
+            filename = re.sub(r'\W+', '', filename) + '.txt'
+            with open(filename, 'w'):
+                pass
+            break
+        except FileNotFoundError:
+            print("Invalid filename. Please try again.")
+        except FileExistsError:
+            print("File already exists. Please choose a different filename.")
 
-#end of touch
 def cmdReboot():
-  """Reboots the system."""
-  os.system('python redirect.py')
-#end of reboot
+    """Reboots the system."""
+    os.system('python redirect.py')
 
-# Declare the global variable outside the function
-capturevalue = 0
+# Global variable
+capture_value = 0
 
 def cmdCapture(input, user):
-      """Captures a value and adds to it based on user input."""
-      global capturevalue
-      capturevalue += int(input[0])
-      print(capturevalue)
-      user['Capture'] = capturevalue
-#end of capture
+    """Captures a value and adds to it based on user input."""
+    global capture_value
+    capture_value += int(input[0])
+    print(capture_value)
+    user['Capture'] = capture_value
 
 def cmdRelease(input, user):
-      """Releases a value and subtracts from it based on user input."""
-      global capturevalue
-      capturevalue -= int(input[0])
-      print(capturevalue)
-      user['Capture'] = capturevalue
-#end of release
+    """Releases a value and subtracts from it based on user input."""
+    global capture_value
+    capture_value -= int(input[0])
+    print(capture_value)
+    user['Capture'] = capture_value
 
 def cmdApprehend(input, user):
-      """Apprehends a value and multiplies it based on user input."""
-      global capturevalue
-      capturevalue *= int(input[0])
-      print(capturevalue)
-      user['Capture'] = capturevalue
-#end of apprehend
+    """Apprehends a value and multiplies it based on user input."""
+    global capture_value
+    capture_value *= int(input[0])
+    print(capture_value)
+    user['Capture'] = capture_value
 
 def cmdDeapprehend(input, user):
-      """Deapprehends a value and divides it based on user input."""
-      global capturevalue
-      capturevalue /= int(input[0])
-      print(capturevalue)
-      user['Capture'] = capturevalue
-#end of deapprehend
+    """Deapprehends a value and divides it based on user input."""
+    global capture_value
+    capture_value /= int(input[0])
+    print(capture_value)
+    user['Capture'] = capture_value
