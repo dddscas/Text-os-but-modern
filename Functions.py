@@ -1,3 +1,4 @@
+# Imports
 import datetime
 import os
 import sys
@@ -80,7 +81,7 @@ def cmdTouch():
 
 def cmdReboot():
     """Reboots the system."""
-    os.system('python redirect.py')
+    os.system('python main.py')
 
 # Global variable
 capture_value = 0
